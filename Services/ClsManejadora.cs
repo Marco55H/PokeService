@@ -1,17 +1,18 @@
 ﻿using clsPokemon;
 using Newtonsoft.Json;
+using static System.Net.WebRequestMethods;
 
 namespace Services
 {
     public class ClsManejadora
     {
-        public async Task<List<ClsPokemon>> getPokemons()
+        public async Task<List<ClsPokemon>> getPokemons(int cont)
         {
             //Pido la cadena de la Uri al método estático
 
             string miCadenaUrl = clsUriBase.getUriBase();
 
-            Uri miUri = new Uri($"{miCadenaUrl}Personas");
+            Uri miUri = new Uri($"https://pokeapi.co/api/v2/pokemon?offset={ cont }&limit=20");
 
             List<ClsPokemon> listadoPokemons = new List<ClsPokemon>();
 

@@ -1,6 +1,8 @@
 ﻿using clsPokemon;
+using Ent;
 using Newtonsoft.Json;
-using static System.Net.WebRequestMethods;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -8,48 +10,35 @@ namespace Services
     {
         public async Task<List<ClsPokemon>> getPokemons(int cont)
         {
-            //Pido la cadena de la Uri al método estático
-
-            string miCadenaUrl = clsUriBase.getUriBase();
-
-            Uri miUri = new Uri($"https://pokeapi.co/api/v2/pokemon?offset={ cont }&limit=20");
+            Uri miUri = new Uri($"https://pokeapi.co/api/v2/pokemon?offset={cont}&limit=20");
 
             List<ClsPokemon> listadoPokemons = new List<ClsPokemon>();
 
-            HttpClient mihttpClient;
-
-            HttpResponseMessage miCodigoRespuesta;
-
-            string textoJsonRespuesta;
-
-            //Instanciamos el cliente Http
-
-            mihttpClient = new HttpClient();
+            HttpClient mihttpClient = new HttpClient();
 
             try
             {
-                miCodigoRespuesta = await mihttpClient.GetAsync(miUri);
+                HttpResponseMessage miCodigoRespuesta = await mihttpClient.GetAsync(miUri);
 
                 if (miCodigoRespuesta.IsSuccessStatusCode)
                 {
-                    textoJsonRespuesta = await mihttpClient.GetStringAsync(miUri);
+                    string textoJsonRespuesta = await miCodigoRespuesta.Content.ReadAsStringAsync();
 
-                    mihttpClient.Dispose();
+                    // Deserializa el JSON en un objeto de tipo ClsResultadoApi con sus cosas 
+                    var apiResponse = JsonConvert.DeserializeObject<ClsResultadoApi>(textoJsonRespuesta);
 
-                    //JsonConvert necesita using Newtonsoft.Json;
-
-                    //Es el paquete Nuget de Newtonsoft
-
-                    listadoPokemons = JsonConvert.DeserializeObject<List<ClsPokemon>>(textoJsonRespuesta);
+                    // Results de la respuesta inicial
+                    listadoPokemons = apiResponse?.Results?.Select(r => new ClsPokemon { Name = r.Name, Url = r.Url }).ToList() ?? new List<ClsPokemon>();
+                    
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                Console.WriteLine($"Error al obtener datos: {ex.Message}");
             }
 
             return listadoPokemons;
-
         }
+
     }
 }

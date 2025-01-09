@@ -5,53 +5,33 @@
              x:Class="PokeService.Views.MainPage">
 
     <ContentPage.BindingContext>
-        <vm:PokemonsVM></vm:PokemonsVM>
+        <vm:PokemonsVM />
     </ContentPage.BindingContext>
 
     <Grid>
-        <ScrollView>
 
-            <ListView ItemsSource="{Binding Pokemons}">
-            
-                <ListView.Header >
-                
-                    <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="SeaGreen">
-                    
-                        <Label Text="Nombre" FontSize="20" FontAttributes="Bold" HorizontalOptions="FillAndExpand"/>
-                    
-                    </StackLayout>
-                
-                </ListView.Header>
-
-                <ListView.ItemTemplate>
-                    
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollView Padding="10" Grid.Column="0">
+            <!-- ListView para mostrar los Pokémon -->
+            <CollectionView ItemsSource="{Binding Pokemons}">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                    
-                        <ViewCell>
-                        
-                            <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="FillAndExpand">
-                            
-                                <Label Text="{Binding Name}" FontSize="20" HorizontalOptions="FillAndExpand"/>
-                            
-                            </StackLayout>
-
-                        </ViewCell>
-
+                        <StackLayout Padding="5" Orientation="Horizontal">
+                            <Label Text="{Binding Name}" 
+                                   FontSize="16" 
+                                   VerticalOptions="Center" />
+                        </StackLayout>
                     </DataTemplate>
-
-
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView> 
         
-
-        </ScrollView>
-
-        <Button
-            Command="{Binding CmdPedirPokemons}"
-            CornerRadius="30"
-            WidthRequest="60"
-            HeightRequest="60"
-            Margin="20"
-        />
+        <!-- Botón para cargar más Pokémon -->
+        <Button Text="Cargar Pokémon"
+                Grid.Column="1"
+                Command="{Binding CmdPedirPokemons}"/>
     </Grid>
 </ContentPage>

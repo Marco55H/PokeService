@@ -17,8 +17,11 @@ namespace PokeService.ViewModels
         #region Atributos
         private ObservableCollection<ClsPokemon> pokemons;
         private DelegateCommand cmdPedirPokemons;
-        private int cont=0;
+        private DelegateCommand cmdPokemonsAtras;
+        private int cont= -20;
         private int id = 0;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
         #endregion
 
         #region Propiedades
@@ -28,18 +31,18 @@ namespace PokeService.ViewModels
             {
                 return pokemons;
             }
-            set
-            {
-                NotifyPropertyChanged("pokemons"); pokemons = value;
-            }
+
         }
         public DelegateCommand CmdPedirPokemons { get {return cmdPedirPokemons;} }
+        public DelegateCommand CmdPokemonsAtras { get { return cmdPokemonsAtras; } }
+
         #endregion
 
         #region Constructores
         public PokemonsVM() 
         { 
             pokemons = new ObservableCollection<ClsPokemon>();
+            cmdPokemonsAtras = new DelegateCommand(cmdPokemonsAtras_Execute, cmdPedirPokemons_CanExecute);
             cmdPedirPokemons = new DelegateCommand(cmdPedirPokemons_Execute, cmdPedirPokemons_CanExecute);
         }
 
@@ -53,25 +56,34 @@ namespace PokeService.ViewModels
 
         private async void cmdPedirPokemons_Execute()
         {
+            cont += 20;
+
             ClsManejadora manejadora = new ClsManejadora();
             List<ClsPokemon> listaPokemon = await manejadora.getPokemons(cont);
 
+            pokemons.Clear();
 
             foreach (ClsPokemon pokemon in listaPokemon)
             {
                 pokemons.Add(pokemon);
             }
-
-            cont += 20;           
         }
-        #endregion
 
-        #region Property Changed
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        private async void cmdPokemonsAtras_Execute()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            
+            cont -= 20;
+
+            ClsManejadora manejadora = new ClsManejadora();
+            List<ClsPokemon> listaPokemon = await manejadora.getPokemons(cont);
+
+            pokemons.Clear();
+
+            foreach (ClsPokemon pokemon in listaPokemon)
+            {
+                pokemons.Add(pokemon);
+            }
+            
         }
         #endregion
 

@@ -8,30 +8,83 @@
         <vm:PokemonsVM />
     </ContentPage.BindingContext>
 
-    <Grid>
+    <Grid Padding="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ScrollView Padding="10" Grid.Column="0">
+
+        <Label 
+            Grid.Row="0" 
+            Grid.Column="1" 
+            Text="Lista Pokemons" 
+            FontSize="64" 
+            BackgroundColor="Beige" 
+            HorizontalTextAlignment="Center" 
+            VerticalTextAlignment="Center" />
+
+        <ScrollView Padding="10" Grid.Column="1" Grid.Row="1">
             <!-- ListView para mostrar los Pokémon -->
             <CollectionView ItemsSource="{Binding Pokemons}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Padding="5" Orientation="Horizontal">
-                            <Label Text="{Binding Name}" 
-                                   FontSize="16" 
-                                   VerticalOptions="Center" />
+                        <StackLayout Padding="5" Orientation="Horizontal"  HorizontalOptions="Center">
+
+                            <Frame CornerRadius="10" 
+                               BorderColor="DarkBlue" 
+                               BackgroundColor="LightBlue" 
+                               Padding="10"
+                               HorizontalOptions="FillAndExpand">
+
+                                <Label Text="{Binding Name}"
+                                       FontSize="32"
+                                       HorizontalOptions="CenterAndExpand"
+                                       TextColor="White">
+
+                                    <Label.Shadow>
+                                        <Shadow Brush="Black" 
+                                                Opacity="0.5" 
+                                                Offset="5,5" 
+                                                Radius="10"/>
+                                    </Label.Shadow>
+                                </Label>
+
+                            </Frame>
+
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </ScrollView> 
+        </ScrollView>
+
+        <Button Text="&lt;"
+            Grid.Row="1"
+            Grid.Column="0"
+            Command="{Binding CmdPokemonsAtras}"
+            BackgroundColor="LightBlue"
+            TextColor="White"
+            BorderColor="DarkBlue"
+            BorderWidth="2"
+            CornerRadius="10"
+        />
+
+        <Button Text=">"
+                Grid.Row="1"
+                Grid.Column="2"
+                Command="{Binding CmdPedirPokemons}"
+                BackgroundColor="LightBlue"
+                TextColor="White"
+                BorderColor="DarkBlue"
+                BorderWidth="2"
+                CornerRadius="10"
+        />
         
-        <!-- Botón para cargar más Pokémon -->
-        <Button Text="Cargar Pokémon"
-                Grid.Column="1"
-                Command="{Binding CmdPedirPokemons}"/>
     </Grid>
 </ContentPage>
